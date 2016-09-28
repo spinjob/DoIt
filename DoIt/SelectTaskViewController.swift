@@ -10,25 +10,30 @@ import UIKit
 
 class SelectTaskViewController: UIViewController {
 
-    var task = Task()
-    var previousViewController = TasksViewController ()
     
     @IBOutlet weak var taskLabel: UILabel!
-    
+   
+    var task : Task? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if task.important {taskLabel!.text = "\(task.name)❗️"
+        if task!.important {taskLabel!.text = "\(task!.name!)❗️"
             
-        } else {taskLabel!.text = task.name
+        } else {taskLabel!.text = task!.name!
         }
     }
 
    
     @IBAction func completeTapped(_ sender: AnyObject) {
-        previousViewController.tasks.remove(at: previousViewController.selectedIndex)
-        previousViewController.tableView.reloadData()
+
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        print("\(task!.name) removed")
+        
+        context.delete(task!)
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        
         navigationController!.popViewController(animated: true)
 
     }
